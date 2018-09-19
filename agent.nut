@@ -46,24 +46,21 @@ function httpGetFromThingSpeak (field) {
 device.on("update", function(state) {
   server.log(format("updating working button to: %i", state.workingToggle));
   server.log(format("updating standing switch to: %i", state.standingState));
-  server.log(format("Humidity: %0.1f %%", state.humidity));
-  server.log(format("Temperature: %0.1f C", state.temperature));
+  server.log(format("Temperature: %0.6f C", state.temperature));
   local thingSpeakResponse = httpPostToThingSpeak(
     "field1=1" +
     "&field2=" + state.workingToggle +
     "&field3=" + state.standingState +
-    "&field4=" + state.humidity +
     "&field5=" + state.temperature
   );
 //   server.log("thingspeak response body: " + thingSpeakResponse.body);
   server.log("thingspeak response code: " + thingSpeakResponse.statuscode);
 
   local adafruitRequest = format(
-    "{\"feeds\":[{\"key\":\"working\",\"value\":\"%i\"},{\"key\":\"standing\",\"value\":\"%i\"},{\"key\":\"temperature\",\"value\":\"%f\"},{\"key\":\"humidity\",\"value\":\"%f\"}]}",
+    "{\"feeds\":[{\"key\":\"working\",\"value\":\"%i\"},{\"key\":\"standing\",\"value\":\"%i\"},{\"key\":\"temperature\",\"value\":\"%f\"}]}",
     state.workingToggle,
     state.standingState,
-    state.temperature,
-    state.humidity
+    state.temperature
   );
 //   server.log("adafruit request: " + adafruitRequest);
   local adafruitResponse = httpPostToAdafruit(adafruitRequest);
